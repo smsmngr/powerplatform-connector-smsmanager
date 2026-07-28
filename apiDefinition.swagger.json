@@ -1,0 +1,196 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "SmsManager",
+    "description": "Send SMS (and multi-channel) messages through the SmsManager API. Deliver transactional and promotional messages to one or more recipients worldwide with a single action.",
+    "version": "2.0",
+    "contact": {
+      "name": "SmsManager Support",
+      "url": "https://developers.smsmanager.com"
+    }
+  },
+  "host": "api.smsmngr.com",
+  "basePath": "/v2",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "x-api-key",
+      "description": "SmsManager API key. Create one in your account settings at https://app.smsmanager.com/api-cloud."
+    }
+  },
+  "security": [
+    {
+      "api_key": []
+    }
+  ],
+  "paths": {
+    "/message": {
+      "post": {
+        "operationId": "SendMessage",
+        "summary": "Send message",
+        "description": "Send a single message to one or more recipients (up to 10 recipients per request).",
+        "x-ms-visibility": "important",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Message"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Messages accepted for delivery.",
+            "schema": {
+              "$ref": "#/definitions/MessageResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request. The request body is invalid.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized. The API key is missing or invalid.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Message": {
+      "type": "object",
+      "required": [
+        "body",
+        "to"
+      ],
+      "properties": {
+        "body": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "The text content of the message.",
+          "title": "Message text",
+          "x-ms-summary": "Message text"
+        },
+        "to": {
+          "type": "array",
+          "description": "List of recipients (1 to 10).",
+          "title": "Recipients",
+          "x-ms-summary": "Recipients",
+          "items": {
+            "type": "object",
+            "required": [
+              "phone_number"
+            ],
+            "properties": {
+              "phone_number": {
+                "type": "string",
+                "description": "Recipient's phone number in international E.164 format without a leading '+' or '00' (for example 420777123456).",
+                "title": "Phone number",
+                "x-ms-summary": "Phone number",
+                "example": "420777123456"
+              }
+            }
+          }
+        },
+        "tag": {
+          "type": "string",
+          "description": "Optional tag used to group messages (for example by campaign). Special tags: 'priority', 'transactional'.",
+          "title": "Tag",
+          "x-ms-summary": "Tag",
+          "x-ms-visibility": "advanced"
+        }
+      }
+    },
+    "MessageResponse": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "description": "Unique identifier of the request.",
+          "title": "Request ID",
+          "x-ms-summary": "Request ID"
+        },
+        "accepted": {
+          "type": "array",
+          "description": "Recipients that were accepted for delivery.",
+          "title": "Accepted",
+          "x-ms-summary": "Accepted",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string",
+                "description": "Index of the recipient in the original 'to' array.",
+                "title": "Key",
+                "x-ms-summary": "Key"
+              },
+              "message_id": {
+                "type": "string",
+                "description": "Unique identifier of the accepted message.",
+                "title": "Message ID",
+                "x-ms-summary": "Message ID"
+              }
+            }
+          }
+        },
+        "rejected": {
+          "type": "array",
+          "description": "Recipients that were rejected.",
+          "title": "Rejected",
+          "x-ms-summary": "Rejected",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string",
+                "description": "Index of the recipient in the original 'to' array.",
+                "title": "Key",
+                "x-ms-summary": "Key"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "Message": {
+          "type": "string",
+          "description": "Human-readable error message.",
+          "title": "Message",
+          "x-ms-summary": "Error message"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "sending",
+      "description": "Operations for sending messages."
+    }
+  ]
+}

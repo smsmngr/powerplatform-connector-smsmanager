@@ -1,0 +1,38 @@
+{
+  "properties": {
+    "connectionParameters": {
+      "api_key": {
+        "type": "securestring",
+        "uiDefinition": {
+          "displayName": "API Key",
+          "description": "The API key for the SmsManager API. Create one in your account settings at https://app.smsmanager.com/api-cloud.",
+          "tooltip": "Provide your SmsManager API key",
+          "constraints": {
+            "tabIndex": 2,
+            "clearText": false,
+            "required": "true"
+          }
+        }
+      }
+    },
+    "iconBrandColor": "#A81943",
+    "capabilities": [],
+    "publisher": "SmsManager",
+    "stackOwner": "SmsManager",
+    "policyTemplateInstances": [
+      {
+        "templateId": "setheader",
+        "title": "Content-Type: application/json",
+        "parameters": {
+          "x-ms-apimTemplate-operationName": [
+            "SendMessage"
+          ],
+          "x-ms-apimTemplate-policySection": "Request",
+          "x-ms-apimTemplateParameter.name": "Content-Type",
+          "x-ms-apimTemplateParameter.value": "application/json",
+          "x-ms-apimTemplateParameter.existsAction": "override"
+        }
+      }
+    ]
+  }
+}

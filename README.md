@@ -23,7 +23,7 @@ Under the hood it calls `POST https://api.smsmngr.com/v2/message` with the
 {
   "body": "Your verification code is 1234",
   "to": [
-    { "phone_number": "420777123456" }
+    { "phone_number": "+420777123456" }
   ],
   "tag": "transactional"
 }
@@ -31,8 +31,78 @@ Under the hood it calls `POST https://api.smsmngr.com/v2/message` with the
 
 - `body` — the message text (required, max 1000 characters).
 - `to` — array of recipients, each with a `phone_number` in international E.164
-  format **without** a leading `+` or `00` (for example `420777123456`). 1–10 recipients.
+  format, **including** the leading `+` (for example `+420777123456`). 1–10 recipients.
 - `tag` — optional label to group messages. Special values: `priority`, `transactional`.
+
+### Delivery receipts
+
+To receive delivery status updates, add a `callback` **object** to the request
+body. You fully define how SmsManager POSTs each receipt — URL, HTTP method,
+content type, headers and body template — so receipts arrive natively in exactly
+the shape your target expects. There is no middleware and no fixed schema on
+SmsManager's side.
+
+`callback` object fields:
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `url` | string | **Required.** Where SmsManager sends the receipt. Must match `^https?://`, length 8–2048. |
+| `method` | string | `POST` \| `PUT` \| `PATCH` \| `GET`. |
+| `content_type` | string | `application/json` \| `application/x-www-form-urlencoded`. |
+| `headers` | object | Custom headers your platform needs (auth tokens, signatures, …), up to 20 keys. |
+| `item` | object \| array | Per-recipient template. |
+| `body` | object \| array | Request body template SmsManager fills with receipt data. |
+| `batch_size` | integer | 1–500. |
+| `timeout_ms` | integer | 1000–10000. |
+
+Because you supply `url` / `method` / `content_type` / `headers` / `body`,
+SmsManager formats each outgoing receipt request in whatever shape the target
+platform requires.
+
+#### Power Platform example
+
+Point the callback at a **Power Automate flow** that starts with the *"When a
+HTTP request is received"* trigger. Copy that trigger's generated URL into
+`callback.url`, then map SmsManager's receipt data onto the JSON fields your flow
+expects:
+
+```json
+{
+  "body": "Your verification code is 1234",
+  "to": [
+    { "phone_number": "+420777123456" }
+  ],
+  "tag": "transactional",
+  "callback": {
+    "url": "https://prod-00.westeurope.logic.azure.com/workflows/YOUR_WORKFLOW_ID/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=YOUR_TRIGGER_SIGNATURE",
+    "method": "POST",
+    "content_type": "application/json",
+    "headers": {
+      "x-flow-token": "YOUR_SHARED_SECRET"
+    },
+    "body": {
+      "messageId": "{{message_id}}",
+      "recipient": "{{phone_number}}",
+      "status": "{{status}}",
+      "deliveredAt": "{{delivered_at}}"
+    },
+    "batch_size": 50,
+    "timeout_ms": 5000
+  }
+}
+```
+
+Fill the placeholders (`YOUR_WORKFLOW_ID`, `YOUR_TRIGGER_SIGNATURE`,
+`YOUR_SHARED_SECRET`) with the values from your own flow. Configure the flow
+trigger's *Request Body JSON Schema* to match the `callback.body` template above
+so the delivery-receipt fields land in named dynamic-content tokens.
+
+> **Endpoint note.** The rich `callback` object shown here is delivered by the
+> JSON API v2 path this connector uses
+> (`POST https://api.smsmngr.com/v2/message`, JSON body, `x-api-key` header).
+> Because the request is sent as JSON, the `callback` object can carry a fully
+> custom receipt shape — URL, method, headers and body template — which is exactly
+> what this connector does.
 
 ### Response shape
 
@@ -54,13 +124,13 @@ Under the hood it calls `POST https://api.smsmngr.com/v2/message` with the
 ## API key setup
 
 1. Sign in to your SmsManager account.
-2. Open **Account settings → API** at <https://app.smsmanager.com/api-cloud>.
+2. Open **Account settings → API** at <https://app.smsmanager.com/app/developers/apikeys>.
 3. Create an API key.
 4. When you create a connection to this connector in Power Platform, paste the key
    into the **API Key** field. It is sent as the `x-api-key` header on every request.
 
 Never commit a real API key to source control. In examples above the demo recipient
-number `420777123456` is a placeholder.
+number `+420777123456` is a placeholder.
 
 ## Files
 

@@ -5,7 +5,7 @@
         "type": "securestring",
         "uiDefinition": {
           "displayName": "API Key",
-          "description": "The API key for the SmsManager API. Create one in your account settings at https://app.smsmanager.com/api-cloud.",
+          "description": "The API key for the SmsManager API. Create one in your account settings at https://app.smsmanager.com/app/developers/apikeys.",
           "tooltip": "Provide your SmsManager API key",
           "constraints": {
             "tabIndex": 2,

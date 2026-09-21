@@ -6,9 +6,15 @@
     "version": "2.0",
     "contact": {
       "name": "SmsManager Support",
-      "url": "https://developers.smsmanager.com"
+      "url": "https://developers.smsmanager.com",
+      "email": "cc@smsmanager.com"
     }
   },
+  "x-ms-connector-metadata": [
+  { "propertyName": "Website", "propertyValue": "https://www.smsmanager.com" },
+  { "propertyName": "Privacy policy", "propertyValue": "https://smsmanager.com/pdf/en_terms.pdf" },
+  { "propertyName": "Categories", "propertyValue": "Communication;Marketing" }
+],
   "host": "api.smsmngr.com",
   "basePath": "/v2",
   "schemes": [

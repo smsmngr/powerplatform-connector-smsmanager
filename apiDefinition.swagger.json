@@ -129,7 +129,7 @@
     },
     "Callback": {
       "type": "object",
-      "description": "Delivery-receipt configuration. You fully define how SmsManager POSTs each delivery receipt to your endpoint (URL, method, headers and body template), so receipts arrive in exactly the shape your target platform expects - no middleware. Ideal target here is a Power Automate 'When a HTTP request is received' flow trigger.",
+      "description": "Delivery-receipt configuration. You define how SmsManager sends each delivery receipt to your endpoint (URL, method, headers and body template), so receipts arrive in exactly the shape your target expects."
       "title": "Delivery receipt callback",
       "x-ms-summary": "Delivery receipt callback",
       "x-ms-visibility": "advanced",
@@ -142,7 +142,7 @@
           "maxLength": 2048,
           "minLength": 8,
           "pattern": "^https?://",
-          "description": "Endpoint SmsManager POSTs each delivery receipt to. For Power Platform, use your Power Automate flow's HTTP request trigger URL.",
+          "description": "Endpoint that SmsManager sends each delivery receipt to, for example the URL of an HTTP request trigger."
           "title": "Callback URL",
           "x-ms-summary": "Callback URL",
           "example": "https://prod-00.westeurope.logic.azure.com/workflows/xxxxxxxx/triggers/manual/paths/invoke?api-version=2016-06-01&sig=YOUR_TRIGGER_SIGNATURE"

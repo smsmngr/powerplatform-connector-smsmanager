@@ -70,16 +70,10 @@
             }
           },
           "400": {
-            "description": "Bad request. The request body is invalid.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "description": "Bad request. The request body is invalid."
           },
           "401": {
-            "description": "Unauthorized. The API key is missing or invalid.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
+            "description": "Unauthorized. The API key is missing or invalid."
           }
         }
       }
@@ -135,7 +129,7 @@
     },
     "Callback": {
       "type": "object",
-      "description": "Delivery-receipt configuration. You define how SmsManager sends each delivery receipt to your endpoint (URL, method, headers and body template), so receipts arrive in exactly the shape your target expects."
+      "description": "Delivery-receipt configuration. You define how SmsManager sends each delivery receipt to your endpoint (URL, method, headers and body template), so receipts arrive in exactly the shape your target expects.",
       "title": "Delivery receipt callback",
       "x-ms-summary": "Delivery receipt callback",
       "x-ms-visibility": "advanced",
@@ -148,7 +142,7 @@
           "maxLength": 2048,
           "minLength": 8,
           "pattern": "^https?://",
-          "description": "Endpoint that SmsManager sends each delivery receipt to, for example the URL of an HTTP request trigger."
+          "description": "Endpoint that SmsManager sends each delivery receipt to, for example the URL of an HTTP request trigger.",
           "title": "Callback URL",
           "x-ms-summary": "Callback URL",
           "example": "https://prod-00.westeurope.logic.azure.com/workflows/xxxxxxxx/triggers/manual/paths/invoke?api-version=2016-06-01&sig=YOUR_TRIGGER_SIGNATURE"
